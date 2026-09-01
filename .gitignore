@@ -1,0 +1,28 @@
+# Commit generator script (never commit into git history)
+commit.py
+
+# Legacy Archive & Backups
+_legacy_archive/
+
+# Node & Next.js
+node_modules/
+.next/
+out/
+build/
+
+# Python caches & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+
+# System & IDE files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
