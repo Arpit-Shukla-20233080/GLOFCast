@@ -1,0 +1,376 @@
+@import "tailwindcss";
+
+:root {
+  --ice-blue: #38bdf8;
+  --glacier-teal: #2dd4bf;
+  --risk-red: #ef4444;
+  --risk-amber: #f59e0b;
+  --risk-green: #22c55e;
+  --panel-bg: rgba(15, 23, 42, 0.85);
+  --panel-border: rgba(255, 255, 255, 0.08);
+}
+
+/* Base dark theme */
+html {
+  color-scheme: dark;
+}
+
+body {
+  background: #0a0f1e;
+  color: #e2e8f0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.5);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(56, 189, 248, 0.5);
+}
+
+/* Glassmorphism utilities */
+.glass {
+  background: var(--panel-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--panel-border);
+}
+
+.glass-light {
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Pulsing risk animation */
+@keyframes risk-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(239, 68, 68, 0.6), 0 0 80px rgba(239, 68, 68, 0.2);
+  }
+}
+
+.risk-pulse-critical {
+  animation: risk-pulse 2s ease-in-out infinite;
+}
+
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.dot-pulse {
+  animation: dot-pulse 2s ease-in-out infinite;
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #38bdf8, #2dd4bf);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Chart container styling */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: rgba(255, 255, 255, 0.06);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LEAFLET: Dark Theme & Base Overrides
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.leaflet-container {
+  background: #0a0f1e;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Dark filter for OSM tiles — creates dark map without API key */
+.dark-tiles {
+  filter: invert(1) hue-rotate(180deg) brightness(0.8) contrast(1.2) saturate(0.3);
+}
+
+.leaflet-control-zoom {
+  display: none !important; /* We use our own zoom controls */
+}
+
+.leaflet-control-attribution {
+  background: rgba(15, 23, 42, 0.8) !important;
+  color: rgba(148, 163, 184, 0.6) !important;
+  font-size: 10px !important;
+  border-radius: 6px 0 0 0 !important;
+  border: none !important;
+}
+
+.leaflet-control-attribution a {
+  color: rgba(56, 189, 248, 0.6) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CUSTOM MAP CONTROLS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.map-control-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.map-control-btn:hover {
+  background: rgba(30, 41, 59, 0.9);
+  color: #e2e8f0;
+  border-color: rgba(56, 189, 248, 0.3);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.15);
+  transform: scale(1.05);
+}
+
+.map-control-btn:active {
+  transform: scale(0.95);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MARKER STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.custom-marker {
+  border: none !important;
+  background: none !important;
+}
+
+/* Lake marker wrapper — handles hover state for the dot */
+.lake-marker-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lake-marker-dot {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.lake-marker-wrapper:hover .lake-marker-dot {
+  transform: scale(1.35);
+}
+
+/* Permanent label at high zoom — clean, compact */
+.lake-marker-label {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 600;
+  color: #e2e8f0;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+  letter-spacing: 0.01em;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CUSTOM PIN (click-to-analyze marker)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.custom-pin-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-pin-dot {
+  width: 22px;
+  height: 22px;
+  background: radial-gradient(circle at 35% 35%, #a855f7, #7c3aed);
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.6);
+  z-index: 2;
+}
+
+.custom-pin-ring {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid rgba(168, 85, 247, 0.35);
+  animation: custom-ring-pulse 2s ease-out infinite;
+  z-index: 1;
+}
+
+@keyframes custom-ring-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.custom-pin-label {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 11px;
+  color: #c084fc;
+  font-weight: 700;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MARKER CLUSTER OVERRIDES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Remove all default MarkerCluster styles */
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+  background: none !important;
+  border: none !important;
+}
+
+.marker-cluster-small div,
+.marker-cluster-medium div,
+.marker-cluster-large div {
+  background: none !important;
+  border: none !important;
+}
+
+/* Our custom cluster icon wrapper */
+.glofcast-cluster-icon,
+.icewatch-cluster-icon {
+  background: none !important;
+  border: none !important;
+}
+
+.cluster-marker {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cluster-marker:hover {
+  transform: scale(1.15) !important;
+  filter: brightness(1.15);
+}
+
+/* Spiderfy line styling */
+.leaflet-cluster-anim .leaflet-marker-icon,
+.leaflet-cluster-anim .leaflet-marker-shadow {
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TOOLTIP STYLES (Solution 1 — hover-to-reveal)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Override Leaflet's default tooltip chrome */
+.glofcast-tooltip,
+.icewatch-tooltip {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  pointer-events: none;
+}
+
+.glofcast-tooltip::before,
+.icewatch-tooltip::before {
+  display: none !important; /* Remove the default arrow */
+}
+
+/* Our styled tooltip content */
+.lake-tooltip {
+  background: rgba(10, 15, 30, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 10px 14px;
+  min-width: 180px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.lake-tooltip-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.lake-tooltip-risk-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.lake-tooltip-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #e2e8f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.lake-tooltip-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 10px;
+  color: #94a3b8;
+  margin-bottom: 4px;
+}
+
+.lake-tooltip-footer {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 9px;
+  color: rgba(56, 189, 248, 0.7);
+  text-align: center;
+  letter-spacing: 0.03em;
+}
+
+/* Panel scrollable area */
+.panel-scroll {
+  overflow-y: auto;
+  max-height: calc(100vh - 80px);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(56, 189, 248, 0.3) transparent;
+}
